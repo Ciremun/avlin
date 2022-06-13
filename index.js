@@ -1735,7 +1735,7 @@ function hide_keyboard() { const soft_kb_input = document.getElementById('soft_k
 function is_mobile() { return (('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0)); }
 function js_choose_file(log,old_filename) { var i = document.createElement('input'); i.type = 'file'; document.body.appendChild(i); i.click(); i.oninput = function() { var file = i.files[0]; if (file) { if(!(file instanceof Blob)) return; const reader = new FileReader(); reader.onloadend = evt => { const uint8_t_data_arr = new Uint8Array(evt.target.result); const uint8_t_data_ptr = _malloc(uint8_t_data_arr.length); HEAPU8.set(uint8_t_data_arr, uint8_t_data_ptr); const new_filename = allocate(intArrayFromString(file.name), ALLOC_NORMAL); ccall('emcc_log_elf_symbols', 'void', ['uint8_t*', 'ImGuiLogger*', 'std::string*', 'char*'], [uint8_t_data_ptr, log, old_filename, new_filename]); _free(uint8_t_data_ptr); _free(new_filename); }; reader.readAsArrayBuffer(file); document.body.removeChild(i); } }; }
 function js_write_clipboard(c_str) { var str = UTF8ToString(c_str); var ta = document.createElement('textarea'); ta.setAttribute('autocomplete', 'off'); ta.setAttribute('autocorrect', 'off'); ta.setAttribute('autocapitalize', 'off'); ta.setAttribute('spellcheck', 'false'); ta.style.left = -100 + 'px'; ta.style.top = -100 + 'px'; ta.style.height = 1; ta.style.width = 1; ta.value = str; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
-function show_keyboard() { const input = document.createElement('input'); input.type = 'text'; input.id = 'soft_kb_input'; document.body.appendChild(input); input.focus(); input.style.position = 'absolute'; input.style.top = 0; input.style.left = 0; input.style.opacity = 0; input.addEventListener('input', (e) => { ccall('soft_kb_input_callback', 'void', ['int'], [e.data.charCodeAt(0)]); e.target.value = ''; }); input.addEventListener('keydown', (e) => { if (e.keyCode === 8 || e.keyCode === 13) { e.preventDefault(); e.stopPropagation(); ccall('soft_kb_input_callback', 'void', ['int'], [e.keyCode]); e.target.value = ''; } }); }
+function show_keyboard() { const input = document.createElement('input'); input.type = 'text'; input.id = 'soft_kb_input'; document.body.appendChild(input); input.focus(); input.style.position = 'absolute'; input.style.top = 0; input.style.left = 0; input.style.opacity = 0; input.addEventListener('input', (e) => { ccall('soft_kb_input_callback', 'void', ['int'], [e.data.charCodeAt(0)]); e.target.value = ""; }); input.addEventListener('keydown', (e) => { if (e.keyCode === 8 || e.keyCode === 13) { e.preventDefault(); e.stopPropagation(); ccall('soft_kb_input_callback', 'void', ['int'], [e.keyCode]); e.target.value = ""; } }); }
 
 
 
@@ -6806,9 +6806,6 @@ var _soft_kb_input_callback = Module["_soft_kb_input_callback"] = createExportWr
 var _main = Module["_main"] = createExportWrapper("main");
 
 /** @type {function(...*):?} */
-var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
-
-/** @type {function(...*):?} */
 var _emcc_log_elf_symbols = Module["_emcc_log_elf_symbols"] = createExportWrapper("emcc_log_elf_symbols");
 
 /** @type {function(...*):?} */
@@ -6819,6 +6816,9 @@ var _malloc = Module["_malloc"] = createExportWrapper("malloc");
 
 /** @type {function(...*):?} */
 var _free = Module["_free"] = createExportWrapper("free");
+
+/** @type {function(...*):?} */
+var ___errno_location = Module["___errno_location"] = createExportWrapper("__errno_location");
 
 /** @type {function(...*):?} */
 var ___funcs_on_exit = Module["___funcs_on_exit"] = createExportWrapper("__funcs_on_exit");
